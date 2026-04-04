@@ -1,0 +1,1065 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Zappê — Criar conta</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
+<style>
+:root {
+  --zap: #FF4D00;
+  --zap2: #FF7A00;
+  --dark: #0D0D0D;
+  --dark2: #161616;
+  --dark3: #1F1F1F;
+  --dark4: #2A2A2A;
+  --cream: #FFF8F2;
+  --muted: #666;
+  --muted2: #999;
+  --white: #fff;
+  --green: #00D97E;
+  --green2: #00B868;
+  --red: #FF4444;
+  --blue: #3B8BFF;
+  --border: rgba(255,255,255,0.08);
+  --border-hover: rgba(255,255,255,0.16);
+  --font-head: 'Syne', sans-serif;
+  --font-body: 'DM Sans', sans-serif;
+}
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body { font-family: var(--font-body); background: var(--dark); color: var(--white); min-height: 100vh; }
+
+/* LAYOUT */
+.signup-layout {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  min-height: 100vh;
+}
+
+/* LEFT PANEL */
+.left-panel {
+  background: var(--dark2);
+  border-right: 1px solid var(--border);
+  padding: 48px;
+  display: flex;
+  flex-direction: column;
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  overflow: hidden;
+}
+
+.left-logo { font-family: var(--font-head); font-size: 26px; font-weight: 800; margin-bottom: 48px; }
+.left-logo span { color: var(--zap); }
+
+.left-headline { font-family: var(--font-head); font-size: 38px; font-weight: 800; line-height: 1.1; letter-spacing: -1.5px; margin-bottom: 16px; }
+.left-headline em { font-style: normal; background: linear-gradient(135deg, var(--zap), var(--zap2)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+.left-sub { font-size: 15px; color: rgba(255,255,255,0.45); line-height: 1.7; margin-bottom: 48px; }
+
+.left-benefits { display: flex; flex-direction: column; gap: 16px; margin-bottom: auto; }
+.benefit-item { display: flex; align-items: center; gap: 14px; }
+.benefit-icon { width: 40px; height: 40px; background: rgba(255,77,0,0.1); border: 1px solid rgba(255,77,0,0.2); border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 18px; flex-shrink: 0; }
+.benefit-text { font-size: 14px; color: rgba(255,255,255,0.65); line-height: 1.4; }
+.benefit-text strong { color: var(--white); display: block; margin-bottom: 2px; font-weight: 600; }
+
+.left-social-proof { margin-top: 40px; padding: 20px; background: rgba(255,255,255,0.03); border: 1px solid var(--border); border-radius: 16px; }
+.lsp-avatars { display: flex; margin-bottom: 10px; }
+.lsp-avatar { width: 32px; height: 32px; border-radius: 50%; border: 2px solid var(--dark2); background: linear-gradient(135deg, var(--zap), var(--zap2)); display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 700; margin-left: -8px; }
+.lsp-avatar:first-child { margin-left: 0; }
+.lsp-text { font-size: 13px; color: rgba(255,255,255,0.5); }
+.lsp-text strong { color: var(--white); }
+
+/* RIGHT PANEL */
+.right-panel {
+  padding: 48px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+}
+
+/* PROGRESS */
+.progress-bar {
+  display: flex;
+  align-items: center;
+  gap: 0;
+  margin-bottom: 48px;
+}
+
+.step-dot {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  position: relative;
+  flex: 1;
+}
+
+.step-dot:last-child { flex: 0; }
+
+.step-circle {
+  width: 36px; height: 36px;
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 13px; font-weight: 700;
+  position: relative; z-index: 1;
+  transition: all 0.3s;
+  border: 2px solid var(--border);
+  color: var(--muted);
+  background: var(--dark3);
+}
+
+.step-dot.active .step-circle { border-color: var(--zap); color: var(--zap); background: rgba(255,77,0,0.1); }
+.step-dot.done .step-circle { border-color: var(--green); color: var(--white); background: var(--green); }
+
+.step-label { font-size: 11px; color: var(--muted); white-space: nowrap; text-align: center; }
+.step-dot.active .step-label { color: var(--white); }
+.step-dot.done .step-label { color: var(--green); }
+
+.step-line {
+  flex: 1;
+  height: 2px;
+  background: var(--border);
+  margin-bottom: 22px;
+  transition: background 0.3s;
+}
+.step-line.done { background: var(--green); }
+
+/* FORM SECTIONS */
+.form-section { display: none; animation: fadeIn 0.4s ease; }
+.form-section.active { display: block; }
+@keyframes fadeIn { from { opacity:0; transform:translateY(12px); } to { opacity:1; transform:translateY(0); } }
+
+.form-title { font-family: var(--font-head); font-size: 28px; font-weight: 800; letter-spacing: -0.5px; margin-bottom: 6px; }
+.form-subtitle { font-size: 14px; color: rgba(255,255,255,0.45); margin-bottom: 36px; line-height: 1.5; }
+
+/* INPUTS */
+.field-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+.field-group { margin-bottom: 18px; }
+.field-group.full { grid-column: 1/-1; }
+
+label { display: block; font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.6px; color: rgba(255,255,255,0.45); margin-bottom: 8px; }
+
+input[type=text], input[type=email], input[type=tel], input[type=password], select {
+  width: 100%;
+  background: var(--dark3);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 14px 16px;
+  color: var(--white);
+  font-size: 15px;
+  font-family: var(--font-body);
+  outline: none;
+  transition: border-color 0.2s, background 0.2s;
+  -webkit-appearance: none;
+}
+input:focus, select:focus { border-color: var(--zap); background: rgba(255,77,0,0.04); }
+input.valid { border-color: var(--green); }
+input.error { border-color: var(--red); }
+select option { background: var(--dark3); }
+
+.field-hint { font-size: 12px; color: var(--muted2); margin-top: 6px; }
+.field-error { font-size: 12px; color: var(--red); margin-top: 6px; display: none; }
+.field-error.show { display: block; }
+
+.input-wrapper { position: relative; }
+.input-icon { position: absolute; right: 14px; top: 50%; transform: translateY(-50%); font-size: 16px; pointer-events: none; }
+
+/* PASSWORD STRENGTH */
+.pw-strength { display: flex; gap: 4px; margin-top: 8px; }
+.pw-bar { height: 3px; flex: 1; border-radius: 2px; background: var(--dark4); transition: background 0.3s; }
+.pw-bar.weak { background: var(--red); }
+.pw-bar.ok { background: #FFB800; }
+.pw-bar.strong { background: var(--green); }
+.pw-label { font-size: 11px; color: var(--muted2); margin-top: 4px; }
+
+/* PLAN CARDS */
+.plan-selector { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 24px; }
+
+.plan-option {
+  border: 2px solid var(--border);
+  border-radius: 16px;
+  padding: 24px 20px;
+  cursor: pointer;
+  transition: all 0.2s;
+  position: relative;
+  background: var(--dark3);
+}
+.plan-option:hover { border-color: var(--border-hover); }
+.plan-option.selected { border-color: var(--zap); background: rgba(255,77,0,0.05); }
+
+.plan-option input[type=radio] { position: absolute; opacity: 0; pointer-events: none; }
+
+.plan-opt-badge { position: absolute; top: -10px; left: 50%; transform: translateX(-50%); background: var(--zap); color: var(--white); font-size: 10px; font-weight: 700; padding: 3px 12px; border-radius: 100px; text-transform: uppercase; letter-spacing: 0.5px; white-space: nowrap; }
+
+.plan-opt-name { font-family: var(--font-head); font-size: 18px; font-weight: 800; margin-bottom: 4px; }
+.plan-opt-price { font-size: 28px; font-weight: 800; color: var(--white); }
+.plan-opt-price span { font-size: 13px; color: var(--muted2); font-weight: 400; }
+.plan-opt-desc { font-size: 12px; color: rgba(255,255,255,0.4); margin-top: 8px; line-height: 1.4; }
+
+.plan-opt-features { margin-top: 14px; display: flex; flex-direction: column; gap: 6px; }
+.plan-opt-feature { font-size: 12px; color: rgba(255,255,255,0.55); display: flex; align-items: center; gap: 6px; }
+.plan-opt-feature::before { content: '✓'; color: var(--green); font-size: 11px; font-weight: 700; }
+
+.plan-check { position: absolute; top: 16px; right: 16px; width: 22px; height: 22px; border-radius: 50%; border: 2px solid var(--border); display: flex; align-items: center; justify-content: center; transition: all 0.2s; }
+.plan-option.selected .plan-check { background: var(--zap); border-color: var(--zap); }
+.plan-option.selected .plan-check::after { content: '✓'; font-size: 11px; font-weight: 700; color: var(--white); }
+
+.trial-callout {
+  background: rgba(0,217,126,0.08);
+  border: 1px solid rgba(0,217,126,0.2);
+  border-radius: 12px;
+  padding: 16px 20px;
+  display: flex; align-items: center; gap: 12px;
+  margin-bottom: 24px;
+}
+.trial-callout-icon { font-size: 22px; }
+.trial-callout-text { font-size: 13px; color: rgba(255,255,255,0.65); line-height: 1.5; }
+.trial-callout-text strong { color: var(--green); }
+
+/* PAYMENT */
+.payment-tabs { display: flex; gap: 8px; margin-bottom: 24px; }
+.pay-tab { flex: 1; padding: 12px; border-radius: 10px; border: 1px solid var(--border); background: var(--dark3); cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; font-size: 14px; font-weight: 500; color: rgba(255,255,255,0.5); transition: all 0.2s; }
+.pay-tab:hover { border-color: var(--border-hover); color: var(--white); }
+.pay-tab.active { border-color: var(--zap); color: var(--white); background: rgba(255,77,0,0.08); }
+
+.card-visual {
+  background: linear-gradient(135deg, #1A1A2E, #2D1B69);
+  border-radius: 16px;
+  padding: 28px;
+  margin-bottom: 24px;
+  position: relative;
+  overflow: hidden;
+  aspect-ratio: 1.586;
+  max-width: 340px;
+}
+.card-visual::before { content: ''; position: absolute; top: -40%; right: -20%; width: 200px; height: 200px; background: rgba(255,77,0,0.15); border-radius: 50%; }
+.card-chip { width: 40px; height: 30px; background: linear-gradient(135deg, #FFD700, #FFA500); border-radius: 6px; margin-bottom: 32px; }
+.card-number { font-family: var(--font-head); font-size: 18px; letter-spacing: 4px; color: rgba(255,255,255,0.8); margin-bottom: 20px; }
+.card-footer { display: flex; justify-content: space-between; align-items: flex-end; }
+.card-holder { }
+.card-label-small { font-size: 9px; text-transform: uppercase; letter-spacing: 1px; color: rgba(255,255,255,0.4); }
+.card-value-small { font-size: 13px; font-weight: 600; margin-top: 2px; }
+.card-brand { font-size: 24px; }
+
+.security-badges { display: flex; gap: 12px; margin-top: 20px; flex-wrap: wrap; }
+.sec-badge { display: flex; align-items: center; gap: 6px; font-size: 11px; color: rgba(255,255,255,0.35); }
+.sec-badge span { font-size: 14px; }
+
+.order-summary {
+  background: var(--dark3);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 24px;
+  margin-bottom: 24px;
+}
+.os-title { font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; color: var(--muted2); margin-bottom: 16px; }
+.os-row { display: flex; justify-content: space-between; align-items: center; padding: 10px 0; border-bottom: 1px solid var(--border); font-size: 14px; }
+.os-row:last-child { border-bottom: none; }
+.os-label { color: rgba(255,255,255,0.55); }
+.os-value { font-weight: 600; }
+.os-value.green { color: var(--green); }
+.os-value.orange { color: var(--zap); }
+.os-total { font-family: var(--font-head); font-size: 18px; font-weight: 800; }
+
+/* CONFIRMATION */
+.confirm-hero { text-align: center; padding: 40px 0; }
+.confirm-icon { width: 80px; height: 80px; background: rgba(0,217,126,0.1); border: 2px solid var(--green); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 36px; margin: 0 auto 24px; animation: popIn 0.5s cubic-bezier(0.175,0.885,0.32,1.275); }
+@keyframes popIn { from{transform:scale(0);opacity:0} to{transform:scale(1);opacity:1} }
+
+.confirm-title { font-family: var(--font-head); font-size: 32px; font-weight: 800; letter-spacing: -1px; margin-bottom: 10px; }
+.confirm-sub { font-size: 15px; color: rgba(255,255,255,0.45); line-height: 1.6; max-width: 380px; margin: 0 auto 40px; }
+
+.confirm-info { background: var(--dark3); border: 1px solid var(--border); border-radius: 16px; padding: 24px; margin-bottom: 20px; text-align: left; }
+.ci-title { font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; color: var(--muted2); margin-bottom: 14px; }
+.ci-row { display: flex; align-items: center; gap: 12px; padding: 10px 0; border-bottom: 1px solid var(--border); }
+.ci-row:last-child { border-bottom: none; }
+.ci-icon { font-size: 18px; width: 36px; height: 36px; background: rgba(255,255,255,0.04); border-radius: 8px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+.ci-label { font-size: 12px; color: var(--muted2); }
+.ci-value { font-size: 14px; font-weight: 600; margin-top: 2px; }
+
+.timeline { display: flex; flex-direction: column; gap: 0; margin: 24px 0; }
+.tl-item { display: flex; gap: 16px; position: relative; }
+.tl-item:not(:last-child)::after { content:''; position:absolute; left:19px; top:40px; width:2px; height:calc(100% - 8px); background: var(--border); }
+.tl-dot { width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 16px; flex-shrink: 0; border: 2px solid var(--border); background: var(--dark3); }
+.tl-dot.active { border-color: var(--zap); background: rgba(255,77,0,0.1); }
+.tl-dot.future { border-color: var(--border); }
+.tl-content { padding: 8px 0 24px; }
+.tl-title { font-weight: 600; font-size: 14px; margin-bottom: 4px; }
+.tl-desc { font-size: 13px; color: rgba(255,255,255,0.4); line-height: 1.5; }
+
+.sent-badges { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 16px; }
+.sent-badge { display: flex; align-items: center; gap: 6px; background: rgba(0,217,126,0.1); border: 1px solid rgba(0,217,126,0.2); border-radius: 100px; padding: 6px 14px; font-size: 13px; color: var(--green); font-weight: 500; }
+
+/* BUTTONS */
+.btn-primary {
+  background: var(--zap);
+  color: var(--white);
+  border: none;
+  padding: 16px 32px;
+  border-radius: 12px;
+  font-family: var(--font-body);
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  width: 100%;
+  transition: all 0.2s;
+  display: flex; align-items: center; justify-content: center; gap: 8px;
+  margin-top: 8px;
+}
+.btn-primary:hover { transform: translateY(-1px); box-shadow: 0 10px 28px rgba(255,77,0,0.35); }
+.btn-primary:active { transform: translateY(0); }
+.btn-primary:disabled { opacity: 0.5; cursor: not-allowed; transform: none; box-shadow: none; }
+
+.btn-secondary {
+  background: transparent;
+  color: rgba(255,255,255,0.5);
+  border: 1px solid var(--border);
+  padding: 14px 24px;
+  border-radius: 12px;
+  font-family: var(--font-body);
+  font-size: 15px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.btn-secondary:hover { border-color: var(--border-hover); color: var(--white); }
+
+.btn-row { display: flex; gap: 12px; margin-top: 8px; }
+.btn-row .btn-primary { flex: 1; }
+
+.btn-green {
+  background: var(--green);
+  color: var(--dark);
+  border: none;
+  padding: 16px 32px;
+  border-radius: 12px;
+  font-family: var(--font-body);
+  font-size: 16px;
+  font-weight: 700;
+  cursor: pointer;
+  width: 100%;
+  transition: all 0.2s;
+  display: flex; align-items: center; justify-content: center; gap: 8px;
+  margin-top: 8px;
+  text-decoration: none;
+}
+.btn-green:hover { transform: translateY(-1px); box-shadow: 0 10px 28px rgba(0,217,126,0.3); }
+
+/* CHECKBOX */
+.checkbox-row { display: flex; align-items: flex-start; gap: 12px; margin-top: 16px; }
+.checkbox-row input[type=checkbox] { width: 18px; height: 18px; accent-color: var(--zap); margin-top: 2px; flex-shrink: 0; cursor: pointer; }
+.checkbox-row label { font-size: 13px; color: rgba(255,255,255,0.45); line-height: 1.5; text-transform: none; letter-spacing: 0; font-weight: 400; }
+.checkbox-row label a { color: var(--zap2); text-decoration: none; }
+
+/* DIVIDER */
+.divider { display: flex; align-items: center; gap: 16px; margin: 24px 0; }
+.divider::before, .divider::after { content:''; flex: 1; height: 1px; background: var(--border); }
+.divider span { font-size: 12px; color: var(--muted); }
+
+/* LOADING */
+.btn-loading { position: relative; }
+.btn-loading::after { content: ''; width: 18px; height: 18px; border: 2px solid rgba(255,255,255,0.3); border-top-color: white; border-radius: 50%; animation: spin 0.7s linear infinite; }
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* NOTIFICATION PREVIEW */
+.notif-preview {
+  background: var(--dark3);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 20px;
+  margin-top: 20px;
+}
+.np-title { font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; color: var(--muted2); margin-bottom: 14px; }
+.np-item { display: flex; gap: 12px; padding: 12px; background: rgba(255,255,255,0.03); border-radius: 10px; margin-bottom: 8px; }
+.np-item:last-child { margin-bottom: 0; }
+.np-icon { font-size: 22px; flex-shrink: 0; }
+.np-channel { font-size: 10px; color: var(--muted2); margin-bottom: 4px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; }
+.np-msg { font-size: 13px; color: rgba(255,255,255,0.6); line-height: 1.5; }
+.np-msg strong { color: var(--white); }
+
+/* RESPONSIVE */
+@media (max-width: 860px) {
+  .signup-layout { grid-template-columns: 1fr; }
+  .left-panel { display: none; }
+  .right-panel { padding: 32px 24px; }
+  .field-row { grid-template-columns: 1fr; }
+  .plan-selector { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+<body>
+
+<div class="signup-layout">
+
+  <!-- LEFT PANEL -->
+  <div class="left-panel">
+    <div class="left-logo">Zapp<span>ê</span></div>
+
+    <div class="left-headline">
+      Seu negócio<br>vendendo mais<br><em>em 5 minutos.</em>
+    </div>
+    <div class="left-sub">Configure, divulgue e comece a receber pedidos. Sem comissão, sem complicação.</div>
+
+    <div class="left-benefits">
+      <div class="benefit-item">
+        <div class="benefit-icon">🎁</div>
+        <div class="benefit-text">
+          <strong>14 dias completamente grátis</strong>
+          Sem cobrar nada até o 15° dia. Cancele antes sem custo algum.
+        </div>
+      </div>
+      <div class="benefit-item">
+        <div class="benefit-icon">⚡</div>
+        <div class="benefit-text">
+          <strong>Cardápio no ar em minutos</strong>
+          Cadastre seus produtos e compartilhe o link — simples assim.
+        </div>
+      </div>
+      <div class="benefit-item">
+        <div class="benefit-icon">🤖</div>
+        <div class="benefit-text">
+          <strong>IA que vende por você</strong>
+          Atende clientes no WhatsApp enquanto você foca na cozinha.
+        </div>
+      </div>
+      <div class="benefit-item">
+        <div class="benefit-icon">💰</div>
+        <div class="benefit-text">
+          <strong>Zero comissão por pedido</strong>
+          Todo o dinheiro das vendas vai direto para você.
+        </div>
+      </div>
+      <div class="benefit-item">
+        <div class="benefit-icon">🔒</div>
+        <div class="benefit-text">
+          <strong>Dados protegidos e seguros</strong>
+          Pagamento via gateway certificado PCI-DSS. Suas informações nunca vazam.
+        </div>
+      </div>
+    </div>
+
+    <div class="left-social-proof">
+      <div class="lsp-avatars">
+        <div class="lsp-avatar">JC</div>
+        <div class="lsp-avatar" style="background:linear-gradient(135deg,#00D97E,#00B868)">MS</div>
+        <div class="lsp-avatar" style="background:linear-gradient(135deg,#3B8BFF,#1A5CFF)">RF</div>
+        <div class="lsp-avatar" style="background:linear-gradient(135deg,#8B5CF6,#6D28D9)">+</div>
+      </div>
+      <div class="lsp-text"><strong>+200 lojas</strong> já vendem pelo Zappê hoje</div>
+    </div>
+  </div>
+
+  <!-- RIGHT PANEL -->
+  <div class="right-panel">
+
+    <!-- PROGRESS -->
+    <div class="progress-bar">
+      <div class="step-dot active" id="dot1">
+        <div class="step-circle" id="circle1">1</div>
+        <div class="step-label">Sua conta</div>
+      </div>
+      <div class="step-line" id="line1"></div>
+      <div class="step-dot" id="dot2">
+        <div class="step-circle" id="circle2">2</div>
+        <div class="step-label">Seu negócio</div>
+      </div>
+      <div class="step-line" id="line2"></div>
+      <div class="step-dot" id="dot3">
+        <div class="step-circle" id="circle3">3</div>
+        <div class="step-label">Plano</div>
+      </div>
+      <div class="step-line" id="line3"></div>
+      <div class="step-dot" id="dot4">
+        <div class="step-circle" id="circle4">4</div>
+        <div class="step-label">Pagamento</div>
+      </div>
+      <div class="step-line" id="line4"></div>
+      <div class="step-dot" id="dot5">
+        <div class="step-circle" id="circle5">5</div>
+        <div class="step-label">Pronto!</div>
+      </div>
+    </div>
+
+    <!-- ============ STEP 1: CONTA ============ -->
+    <div class="form-section active" id="step1">
+      <div class="form-title">Crie sua conta</div>
+      <div class="form-subtitle">Acesso rápido — você configura o resto depois.</div>
+
+      <div class="field-row">
+        <div class="field-group">
+          <label>Nome</label>
+          <input type="text" id="s1_nome" placeholder="Seu nome" oninput="liveValidateName(this)">
+        </div>
+        <div class="field-group">
+          <label>Sobrenome</label>
+          <input type="text" id="s1_sobrenome" placeholder="Seu sobrenome">
+        </div>
+      </div>
+
+      <div class="field-group">
+        <label>E-mail</label>
+        <div class="input-wrapper">
+          <input type="email" id="s1_email" placeholder="seu@email.com.br" oninput="liveValidateEmail(this)">
+          <span class="input-icon" id="emailIcon"></span>
+        </div>
+        <div class="field-hint">Você receberá seus dados de acesso neste e-mail</div>
+        <div class="field-error" id="emailError">Digite um e-mail válido</div>
+      </div>
+
+      <div class="field-group">
+        <label>WhatsApp</label>
+        <div class="input-wrapper">
+          <input type="tel" id="s1_whats" placeholder="(11) 99999-9999" oninput="maskPhone(this)">
+        </div>
+        <div class="field-hint">Enviaremos seus dados de acesso também por aqui</div>
+      </div>
+
+      <div class="field-group">
+        <label>Senha</label>
+        <div class="input-wrapper">
+          <input type="password" id="s1_senha" placeholder="Mínimo 8 caracteres" oninput="checkPassword(this)">
+          <span class="input-icon" id="eyeIcon" onclick="togglePw('s1_senha','eyeIcon')" style="cursor:pointer">👁️</span>
+        </div>
+        <div class="pw-strength" id="pwStrength">
+          <div class="pw-bar" id="b1"></div>
+          <div class="pw-bar" id="b2"></div>
+          <div class="pw-bar" id="b3"></div>
+          <div class="pw-bar" id="b4"></div>
+        </div>
+        <div class="pw-label" id="pwLabel"></div>
+      </div>
+
+      <div class="field-group">
+        <label>Confirmar senha</label>
+        <input type="password" id="s1_senha2" placeholder="Repita sua senha" oninput="checkConfirm(this)">
+        <div class="field-error" id="confirmError">As senhas não coincidem</div>
+      </div>
+
+      <div class="checkbox-row">
+        <input type="checkbox" id="terms">
+        <label for="terms">Concordo com os <a href="#">Termos de Uso</a> e a <a href="#">Política de Privacidade</a> do Zappê</label>
+      </div>
+
+      <div class="divider"><span>ou continue com</span></div>
+
+      <button class="btn-secondary" style="width:100%;display:flex;align-items:center;justify-content:center;gap:10px;padding:14px">
+        <span>🔵</span> Entrar com Google
+      </button>
+
+      <button class="btn-primary" style="margin-top:20px" onclick="goStep(2)">
+        Criar conta grátis →
+      </button>
+
+      <div style="text-align:center;margin-top:20px;font-size:13px;color:var(--muted)">
+        Já tem conta? <a href="#" style="color:var(--zap2);text-decoration:none">Fazer login</a>
+      </div>
+    </div>
+
+    <!-- ============ STEP 2: NEGÓCIO ============ -->
+    <div class="form-section" id="step2">
+      <div class="form-title">Dados do seu negócio</div>
+      <div class="form-subtitle">Essas informações aparecerão no seu cardápio digital.</div>
+
+      <div class="field-group">
+        <label>Nome da loja</label>
+        <input type="text" id="s2_loja" placeholder="Ex: Pizzaria do João, Lanches da Mari">
+        <div class="field-hint">Este será o nome exibido no seu cardápio</div>
+      </div>
+
+      <div class="field-row">
+        <div class="field-group">
+          <label>Segmento</label>
+          <select id="s2_segmento">
+            <option value="">Selecione...</option>
+            <option>🍕 Pizzaria</option>
+            <option>🍔 Lanchonete</option>
+            <option>🍽️ Restaurante</option>
+            <option>🌸 Floricultura</option>
+            <option>🥤 Açaiteria</option>
+            <option>🥐 Padaria</option>
+            <option>☕ Cafeteria</option>
+            <option>🍣 Sushi / Japonês</option>
+            <option>Outro</option>
+          </select>
+        </div>
+        <div class="field-group">
+          <label>CNPJ / CPF</label>
+          <input type="text" id="s2_doc" placeholder="00.000.000/0001-00" oninput="maskDoc(this)">
+        </div>
+      </div>
+
+      <div class="field-group">
+        <label>Endereço da loja</label>
+        <input type="text" id="s2_end" placeholder="Rua, número, bairro">
+      </div>
+
+      <div class="field-row">
+        <div class="field-group">
+          <label>Cidade</label>
+          <input type="text" id="s2_cidade" placeholder="São Paulo">
+        </div>
+        <div class="field-group">
+          <label>CEP</label>
+          <input type="text" id="s2_cep" placeholder="00000-000" oninput="maskCep(this)">
+        </div>
+      </div>
+
+      <div class="field-row">
+        <div class="field-group">
+          <label>Abre às</label>
+          <input type="text" id="s2_abre" placeholder="11:00">
+        </div>
+        <div class="field-group">
+          <label>Fecha às</label>
+          <input type="text" id="s2_fecha" placeholder="23:00">
+        </div>
+      </div>
+
+      <div class="field-group">
+        <label>WhatsApp da loja (para os clientes)</label>
+        <input type="tel" id="s2_whats" placeholder="(11) 99999-9999" oninput="maskPhone(this)">
+        <div class="field-hint">No Plano Completo, a IA usará este número para atender automaticamente</div>
+      </div>
+
+      <div class="btn-row">
+        <button class="btn-secondary" onclick="goStep(1)">← Voltar</button>
+        <button class="btn-primary" onclick="goStep(3)">Continuar →</button>
+      </div>
+    </div>
+
+    <!-- ============ STEP 3: PLANO ============ -->
+    <div class="form-section" id="step3">
+      <div class="form-title">Escolha seu plano</div>
+      <div class="form-subtitle">Você pode trocar de plano a qualquer momento.</div>
+
+      <div class="trial-callout">
+        <div class="trial-callout-icon">🎁</div>
+        <div class="trial-callout-text">
+          <strong>14 dias grátis em qualquer plano.</strong> Sem cobrança até o 15° dia. Se cancelar antes, o cartão não é debitado.
+        </div>
+      </div>
+
+      <div class="plan-selector">
+        <div class="plan-option" id="planEntry" onclick="selectPlan('entry')">
+          <input type="radio" name="plan" value="entry">
+          <div class="plan-check" id="checkEntry"></div>
+          <div class="plan-opt-name">Entrada</div>
+          <div class="plan-opt-price">R$97<span>/mês</span></div>
+          <div class="plan-opt-desc">Perfeito para dar o primeiro passo no digital.</div>
+          <div class="plan-opt-features">
+            <div class="plan-opt-feature">Cardápio digital</div>
+            <div class="plan-opt-feature">Pedido via WhatsApp</div>
+            <div class="plan-opt-feature">CRM básico</div>
+            <div class="plan-opt-feature">Métricas de vendas</div>
+            <div class="plan-opt-feature">1 promoção/semana</div>
+          </div>
+        </div>
+
+        <div class="plan-option selected" id="planFull" onclick="selectPlan('full')">
+          <div class="plan-opt-badge">⭐ Mais escolhido</div>
+          <div class="plan-check" id="checkFull"></div>
+          <div class="plan-opt-name">Completo</div>
+          <div class="plan-opt-price">R$197<span>/mês</span></div>
+          <div class="plan-opt-desc">Automação total com IA e pagamento online.</div>
+          <div class="plan-opt-features">
+            <div class="plan-opt-feature">Tudo do Entrada</div>
+            <div class="plan-opt-feature">Pagamento Pix e cartão</div>
+            <div class="plan-opt-feature">IA no WhatsApp 24h</div>
+            <div class="plan-opt-feature">Promoções ilimitadas</div>
+            <div class="plan-opt-feature">Relatórios avançados</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="notif-preview">
+        <div class="np-title">📬 Você receberá após confirmar</div>
+        <div class="np-item">
+          <div class="np-icon">📧</div>
+          <div>
+            <div class="np-channel">E-mail</div>
+            <div class="np-msg">Bem-vindo ao Zappê! Aqui estão seus dados de acesso e o link do seu painel. <strong>Trial gratuito ativo por 14 dias.</strong></div>
+          </div>
+        </div>
+        <div class="np-item">
+          <div class="np-icon">💬</div>
+          <div>
+            <div class="np-channel">WhatsApp</div>
+            <div class="np-msg">Oi! 👋 Sua conta no Zappê foi criada. Acesse agora: <strong>app.zappe.com.br/painel</strong> — Senha provisória enviada no e-mail.</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="btn-row" style="margin-top:24px">
+        <button class="btn-secondary" onclick="goStep(2)">← Voltar</button>
+        <button class="btn-primary" onclick="goStep(4)">Continuar →</button>
+      </div>
+    </div>
+
+    <!-- ============ STEP 4: PAGAMENTO ============ -->
+    <div class="form-section" id="step4">
+      <div class="form-title">Dados de pagamento</div>
+      <div class="form-subtitle">Seu cartão só será cobrado após os 14 dias de teste gratuito.</div>
+
+      <div class="order-summary">
+        <div class="os-title">Resumo do pedido</div>
+        <div class="os-row">
+          <span class="os-label">Plano <span id="planNameSummary">Completo</span></span>
+          <span class="os-value" id="planPriceSummary">R$ 197/mês</span>
+        </div>
+        <div class="os-row">
+          <span class="os-label">Período de teste (14 dias)</span>
+          <span class="os-value green">GRÁTIS</span>
+        </div>
+        <div class="os-row">
+          <span class="os-label">Primeiro pagamento em</span>
+          <span class="os-value orange" id="firstPayDate">--</span>
+        </div>
+        <div class="os-row">
+          <span class="os-label" style="font-weight:700;color:white">Total hoje</span>
+          <span class="os-value os-total green">R$ 0,00</span>
+        </div>
+      </div>
+
+      <div class="card-visual" id="cardVisual">
+        <div class="card-chip"></div>
+        <div class="card-number" id="cardNumDisplay">•••• •••• •••• ••••</div>
+        <div class="card-footer">
+          <div class="card-holder">
+            <div class="card-label-small">Titular</div>
+            <div class="card-value-small" id="cardHolderDisplay">SEU NOME</div>
+          </div>
+          <div>
+            <div class="card-label-small">Validade</div>
+            <div class="card-value-small" id="cardExpDisplay">MM/AA</div>
+          </div>
+          <div class="card-brand" id="cardBrand">💳</div>
+        </div>
+      </div>
+
+      <div class="field-group">
+        <label>Número do cartão</label>
+        <input type="text" id="cardNum" placeholder="0000 0000 0000 0000" maxlength="19" oninput="maskCard(this)" onchange="updateCardDisplay()">
+      </div>
+
+      <div class="field-group">
+        <label>Nome no cartão</label>
+        <input type="text" id="cardHolder" placeholder="NOME COMO NO CARTÃO" oninput="this.value=this.value.toUpperCase();document.getElementById('cardHolderDisplay').textContent=this.value||'SEU NOME'">
+      </div>
+
+      <div class="field-row">
+        <div class="field-group">
+          <label>Validade</label>
+          <input type="text" id="cardExp" placeholder="MM/AA" maxlength="5" oninput="maskExp(this)">
+        </div>
+        <div class="field-group">
+          <label>CVV</label>
+          <input type="text" id="cardCvv" placeholder="123" maxlength="4">
+        </div>
+      </div>
+
+      <div class="security-badges">
+        <div class="sec-badge"><span>🔒</span> SSL 256-bit</div>
+        <div class="sec-badge"><span>✅</span> PCI-DSS</div>
+        <div class="sec-badge"><span>🛡️</span> Antifraude</div>
+        <div class="sec-badge"><span>🔄</span> Cancele quando quiser</div>
+      </div>
+
+      <div class="checkbox-row" style="margin-top:20px">
+        <input type="checkbox" id="terms2" checked>
+        <label for="terms2">Entendo que <strong style="color:var(--white)">não serei cobrado durante os 14 dias</strong> e que posso cancelar antes sem custo algum.</label>
+      </div>
+
+      <div class="btn-row" style="margin-top:20px">
+        <button class="btn-secondary" onclick="goStep(3)">← Voltar</button>
+        <button class="btn-primary" id="payBtn" onclick="processPayment()">
+          🔒 Ativar teste grátis
+        </button>
+      </div>
+
+      <div style="text-align:center;margin-top:16px;font-size:12px;color:var(--muted)">
+        Cobrança automática de <span id="payAmtSmall">R$ 197</span>/mês após o 14° dia de teste
+      </div>
+    </div>
+
+    <!-- ============ STEP 5: CONFIRMAÇÃO ============ -->
+    <div class="form-section" id="step5">
+      <div class="confirm-hero">
+        <div class="confirm-icon">🎉</div>
+        <div class="confirm-title">Tudo pronto, <span id="userName">João</span>!</div>
+        <div class="confirm-sub">Sua conta foi criada e seus dados de acesso foram enviados. Bem-vindo ao Zappê!</div>
+
+        <div class="sent-badges">
+          <div class="sent-badge">📧 E-mail enviado</div>
+          <div class="sent-badge">💬 WhatsApp enviado</div>
+        </div>
+      </div>
+
+      <div class="confirm-info">
+        <div class="ci-title">Seus dados de acesso</div>
+        <div class="ci-row">
+          <div class="ci-icon">🔗</div>
+          <div>
+            <div class="ci-label">URL do painel</div>
+            <div class="ci-value" id="ciPainel">app.zappe.com.br/painel</div>
+          </div>
+        </div>
+        <div class="ci-row">
+          <div class="ci-icon">📧</div>
+          <div>
+            <div class="ci-label">Login</div>
+            <div class="ci-value" id="ciEmail">seu@email.com</div>
+          </div>
+        </div>
+        <div class="ci-row">
+          <div class="ci-icon">🍕</div>
+          <div>
+            <div class="ci-label">Seu cardápio (link público)</div>
+            <div class="ci-value" id="ciCardapio">zappe.com.br/lojanome</div>
+          </div>
+        </div>
+        <div class="ci-row">
+          <div class="ci-icon">📅</div>
+          <div>
+            <div class="ci-label">Trial gratuito até</div>
+            <div class="ci-value" id="ciTrial" style="color:var(--green)">--</div>
+          </div>
+        </div>
+        <div class="ci-row">
+          <div class="ci-icon">💳</div>
+          <div>
+            <div class="ci-label">Primeira cobrança em</div>
+            <div class="ci-value" id="ciCobranca" style="color:var(--zap)">--</div>
+          </div>
+        </div>
+      </div>
+
+      <div style="margin-bottom:8px;font-size:13px;font-weight:600;color:rgba(255,255,255,0.5);text-transform:uppercase;letter-spacing:0.5px">O que acontece agora</div>
+      <div class="timeline">
+        <div class="tl-item">
+          <div class="tl-dot active">✅</div>
+          <div class="tl-content">
+            <div class="tl-title">Conta criada</div>
+            <div class="tl-desc">Dados de acesso enviados por e-mail e WhatsApp. Você já pode entrar no painel.</div>
+          </div>
+        </div>
+        <div class="tl-item">
+          <div class="tl-dot active">🛍️</div>
+          <div class="tl-content">
+            <div class="tl-title">Configure seu cardápio</div>
+            <div class="tl-desc">Adicione seus produtos, fotos e preços. Leva menos de 10 minutos.</div>
+          </div>
+        </div>
+        <div class="tl-item">
+          <div class="tl-dot future">🔗</div>
+          <div class="tl-content">
+            <div class="tl-title">Divulgue seu link</div>
+            <div class="tl-desc">Compartilhe no WhatsApp, Instagram e coloque o QR Code no balcão.</div>
+          </div>
+        </div>
+        <div class="tl-item">
+          <div class="tl-dot future">💸</div>
+          <div class="tl-content">
+            <div class="tl-title">Receba seus primeiros pedidos</div>
+            <div class="tl-desc">Clientes fazem pedidos e você acompanha tudo no painel em tempo real.</div>
+          </div>
+        </div>
+        <div class="tl-item">
+          <div class="tl-dot future">💳</div>
+          <div class="tl-content">
+            <div class="tl-title">Cobrança após 14 dias</div>
+            <div class="tl-desc">Só após o trial, sem surpresas. Cancele antes se preferir.</div>
+          </div>
+        </div>
+      </div>
+
+      <a href="painel.html" class="btn-green">
+        🚀 Acessar meu painel agora
+      </a>
+
+      <div style="text-align:center;margin-top:16px;font-size:13px;color:var(--muted)">
+        Dúvidas? <a href="https://wa.me/5511999999999" style="color:var(--zap2);text-decoration:none">Fale com a gente no WhatsApp</a>
+      </div>
+    </div>
+
+  </div><!-- end right-panel -->
+</div>
+
+<script>
+let selectedPlan = 'full';
+let currentStep = 1;
+
+// ─── NAVIGATION ───
+function goStep(n) {
+  document.getElementById('step'+currentStep).classList.remove('active');
+  currentStep = n;
+  document.getElementById('step'+n).classList.add('active');
+  updateProgress();
+  if(n===4) setFirstPayDate();
+  if(n===5) fillConfirmation();
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+function updateProgress() {
+  for(let i=1;i<=5;i++){
+    const dot = document.getElementById('dot'+i);
+    const circle = document.getElementById('circle'+i);
+    dot.classList.remove('active','done');
+    if(i<currentStep){ dot.classList.add('done'); circle.textContent='✓'; }
+    else if(i===currentStep){ dot.classList.add('active'); circle.textContent=i; }
+    else { circle.textContent=i; }
+    if(i<5){ const line=document.getElementById('line'+i); line.classList.toggle('done',i<currentStep); }
+  }
+}
+
+// ─── PLAN SELECT ───
+function selectPlan(p) {
+  selectedPlan = p;
+  document.getElementById('planEntry').classList.toggle('selected', p==='entry');
+  document.getElementById('planFull').classList.toggle('selected', p==='full');
+  const name = p==='full'?'Completo':'Entrada';
+  const price = p==='full'?'R$ 197/mês':'R$ 97/mês';
+  document.getElementById('planNameSummary').textContent = name;
+  document.getElementById('planPriceSummary').textContent = price;
+  document.getElementById('payAmtSmall').textContent = p==='full'?'R$ 197':'R$ 97';
+}
+
+// ─── DATES ───
+function setFirstPayDate() {
+  const d = new Date();
+  d.setDate(d.getDate()+15);
+  const fmt = d.toLocaleDateString('pt-BR',{day:'2-digit',month:'long',year:'numeric'});
+  document.getElementById('firstPayDate').textContent = fmt;
+}
+
+function fillConfirmation() {
+  const email = document.getElementById('s1_email').value || 'seu@email.com';
+  const nome = document.getElementById('s1_nome').value || 'você';
+  const loja = (document.getElementById('s2_loja').value || 'minhaloja').toLowerCase().replace(/\s+/g,'-');
+
+  document.getElementById('userName').textContent = nome;
+  document.getElementById('ciEmail').textContent = email;
+  document.getElementById('ciCardapio').textContent = 'zappe.com.br/'+loja;
+
+  const trial = new Date(); trial.setDate(trial.getDate()+14);
+  const cobr = new Date(); cobr.setDate(cobr.getDate()+15);
+  const fmt = (dt) => dt.toLocaleDateString('pt-BR',{day:'2-digit',month:'long',year:'numeric'});
+  document.getElementById('ciTrial').textContent = fmt(trial);
+  document.getElementById('ciCobranca').textContent = fmt(cobr);
+}
+
+// ─── MASKS ───
+function maskPhone(el) {
+  let v = el.value.replace(/\D/g,'').slice(0,11);
+  if(v.length<=10) v = v.replace(/(\d{2})(\d{4})(\d{0,4})/,'($1) $2-$3');
+  else v = v.replace(/(\d{2})(\d{5})(\d{0,4})/,'($1) $2-$3');
+  el.value = v;
+}
+
+function maskCard(el) {
+  let v = el.value.replace(/\D/g,'').slice(0,16);
+  v = v.replace(/(\d{4})(?=\d)/g,'$1 ');
+  el.value = v;
+  const disp = v || '•••• •••• •••• ••••';
+  document.getElementById('cardNumDisplay').textContent = disp.padEnd(19,'•').replace(/\d(?=.{5})/g,'•');
+  updateCardDisplay();
+  detectBrand(v);
+}
+
+function maskExp(el) {
+  let v = el.value.replace(/\D/g,'').slice(0,4);
+  if(v.length>=2) v = v.slice(0,2)+'/'+v.slice(2);
+  el.value = v;
+  document.getElementById('cardExpDisplay').textContent = v||'MM/AA';
+}
+
+function maskDoc(el) {
+  let v = el.value.replace(/\D/g,'');
+  if(v.length<=11) v=v.replace(/(\d{3})(\d{3})(\d{3})(\d{0,2})/,'$1.$2.$3-$4');
+  else v=v.replace(/(\d{2})(\d{3})(\d{3})(\d{4})(\d{0,2})/,'$1.$2.$3/$4-$5');
+  el.value=v;
+}
+
+function maskCep(el) {
+  let v = el.value.replace(/\D/g,'').slice(0,8);
+  if(v.length>5) v=v.slice(0,5)+'-'+v.slice(5);
+  el.value=v;
+}
+
+function updateCardDisplay() {
+  const num = document.getElementById('cardNum').value.replace(/\s/g,'');
+  const masked = num.padEnd(16,'•').replace(/(.{4})/g,'$1 ').trim();
+  document.getElementById('cardNumDisplay').textContent = masked;
+}
+
+function detectBrand(num) {
+  const n = num.replace(/\s/g,'');
+  let brand = '💳';
+  if(/^4/.test(n)) brand = '💙 Visa';
+  else if(/^5[1-5]/.test(n)) brand = '🔴 Master';
+  else if(/^3[47]/.test(n)) brand = '🟢 Amex';
+  else if(/^6/.test(n)) brand = '🟠 Elo';
+  document.getElementById('cardBrand').textContent = brand;
+}
+
+// ─── VALIDATIONS ───
+function liveValidateEmail(el) {
+  const valid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(el.value);
+  el.classList.toggle('valid', valid && el.value.length>0);
+  el.classList.toggle('error', !valid && el.value.length>3);
+  document.getElementById('emailIcon').textContent = valid?'✅':'';
+  document.getElementById('emailError').classList.toggle('show', !valid && el.value.length>3);
+}
+
+function liveValidateName(el) { el.classList.toggle('valid', el.value.length>1); }
+
+function checkPassword(el) {
+  const pw = el.value;
+  const bars = ['b1','b2','b3','b4'];
+  bars.forEach(b=>{ document.getElementById(b).className='pw-bar'; });
+  let strength=0, label='', cls='';
+  if(pw.length>=8) strength++;
+  if(/[A-Z]/.test(pw)) strength++;
+  if(/[0-9]/.test(pw)) strength++;
+  if(/[^A-Za-z0-9]/.test(pw)) strength++;
+  if(strength===1){label='Fraca';cls='weak';}
+  else if(strength===2){label='Razoável';cls='ok';}
+  else if(strength===3){label='Boa';cls='strong';}
+  else if(strength===4){label='Excelente';cls='strong';}
+  for(let i=0;i<strength;i++) document.getElementById(bars[i]).classList.add(cls);
+  document.getElementById('pwLabel').textContent = pw.length>0?label:'';
+}
+
+function checkConfirm(el) {
+  const pw = document.getElementById('s1_senha').value;
+  const match = el.value===pw && el.value.length>0;
+  el.classList.toggle('valid',match);
+  el.classList.toggle('error',!match&&el.value.length>0);
+  document.getElementById('confirmError').classList.toggle('show',!match&&el.value.length>0);
+}
+
+function togglePw(id, iconId) {
+  const el = document.getElementById(id);
+  el.type = el.type==='password'?'text':'password';
+  document.getElementById(iconId).textContent = el.type==='password'?'👁️':'🙈';
+}
+
+// ─── PAYMENT PROCESSING ───
+function processPayment() {
+  const btn = document.getElementById('payBtn');
+  btn.disabled = true;
+  btn.innerHTML = '';
+  btn.classList.add('btn-loading');
+  setTimeout(()=>{
+    btn.classList.remove('btn-loading');
+    btn.disabled = false;
+    goStep(5);
+  }, 2200);
+}
+
+// ─── INIT ───
+selectPlan('full');
+</script>
+</body>
+</html>
